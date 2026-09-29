@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ChevronRight, MonitorPlay, CheckCircle2, MapPin, FileSignature, ShieldCheck } from 'lucide-react'
+import { ChevronRight, MonitorPlay, CheckCircle2, MapPin, Boxes, TrendingUp, Wallet } from 'lucide-react'
 import { useAnimatedCounter, useTilt } from '../hooks/useScrollReveal'
 import { useDemoChooser } from '../context/DemoChooser'
 import { DEMO_URL } from '../config'
@@ -13,11 +13,11 @@ function DashboardMockup() {
   }, [])
 
   const visits = [
-    { sigla: 'MO', name: 'Maria Oliveira', info: 'Check-out · 38 m', status: 'concluído', color: '#52C48A' },
-    { sigla: 'HF', name: 'Helena Farias',  info: 'Check-in · 42 m',  status: 'em visita', color: '#2BBFB3' },
-    { sigla: 'RB', name: 'Rui Barbosa',    info: 'Agendado · 14h',   status: 'agendado',  color: '#f59e0b' },
+    { sigla: 'HF', name: 'Helena Farias',  info: 'Curativo · R$ 420,00',   status: 'margem 40%', color: '#52C48A' },
+    { sigla: 'RB', name: 'Rui Barbosa',    info: 'Enfermagem · R$ 260,00', status: 'margem 42%', color: '#2BBFB3' },
+    { sigla: 'MO', name: 'Maria Oliveira', info: 'Antibiótico · R$ 380,00', status: 'margem 2%',  color: '#f59e0b' },
   ]
-  const nav = ['Pacientes', 'Agenda', 'Estoque', 'Orçamentos', 'Indicadores']
+  const nav = ['Financeiro', 'Estoque', 'Farmácia', 'Orçamentos', 'Pacientes']
 
   return (
     <div className="bg-navy-2 rounded-2xl border border-teal/20 shadow-[0_40px_100px_rgba(0,0,0,0.55)] overflow-hidden w-full max-w-[460px]">
@@ -25,7 +25,7 @@ function DashboardMockup() {
         <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
         <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
         <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-        <div className="flex-1 mx-4 bg-white/5 rounded-md px-3 py-1 text-[11px] text-white/30 text-center">sanyti · painel da operação</div>
+        <div className="flex-1 mx-4 bg-white/5 rounded-md px-3 py-1 text-[11px] text-white/30 text-center">sanyti · financeiro</div>
       </div>
       <div className="flex h-[300px]">
         <div className="w-[108px] bg-navy/60 border-r border-white/5 p-2.5 flex flex-col gap-1">
@@ -35,11 +35,11 @@ function DashboardMockup() {
         </div>
         <div className="flex-1 p-4 overflow-hidden">
           <div className="text-[11px] text-white/40">Bom dia, Dra. Sofia</div>
-          <div className="font-display font-bold text-white text-sm mb-3">Visitas de hoje</div>
+          <div className="font-display font-bold text-white text-sm mb-3">Resultado do mês</div>
           <div className="grid grid-cols-3 gap-2 mb-4">
-            {[['14', 'Agendadas', '#2BBFB3'], ['9', 'Check-in', '#52C48A'], ['1', 'Divergência', '#f59e0b']].map(([v, l, c]) => (
+            {[['R$ 184k', 'Faturado', '#2BBFB3'], ['R$ 112k', 'Custos', '#f59e0b'], ['39%', 'Margem', '#52C48A']].map(([v, l, c]) => (
               <div key={l} className="bg-white/5 rounded-xl p-2 border border-white/5">
-                <div className="font-display font-black text-lg leading-none" style={{ color: c }}>{v}</div>
+                <div className="font-display font-black text-base leading-none whitespace-nowrap" style={{ color: c }}>{v}</div>
                 <div className="text-white/35 text-[9px] mt-1">{l}</div>
               </div>
             ))}
@@ -53,9 +53,9 @@ function DashboardMockup() {
                   style={{ background: `${v.color}26`, color: v.color }}>{v.sigla}</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-white text-[11px] font-semibold truncate">{v.name}</div>
-                  <div className="text-white/35 text-[9px] flex items-center gap-1"><MapPin size={8} /> {v.info}</div>
+                  <div className="text-white/35 text-[9px] flex items-center gap-1"><Wallet size={8} /> {v.info}</div>
                 </div>
-                <div className="text-[9px] font-bold px-2 py-0.5 rounded-full"
+                <div className="text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
                   style={{ color: v.color, background: `${v.color}26` }}>{v.status}</div>
               </div>
             ))}
@@ -103,7 +103,7 @@ function Words({ text, start = 0, step = 70, className = '' }) {
 }
 
 export default function Hero() {
-  const phrases = ['Prontuário eletrônico', 'Check-in e check-out', 'Bipagem EAN-13', 'Assinatura digital', 'Portal do responsável']
+  const phrases = ['Faturamento preciso', 'Resultado por atendimento', 'Controle de estoque', 'Farmácia conectada', 'Orçamentos por operadora']
   const [phraseIdx, setPhraseIdx] = useState(0)
   const { open: openChooser } = useDemoChooser()
   const tilt = useTilt(6)
@@ -113,7 +113,7 @@ export default function Hero() {
     return () => clearInterval(t)
   }, [phrases.length])
 
-  const checks = ['Tudo em um só sistema', 'Acesso pelo navegador', 'Demo aberta para explorar']
+  const checks = ['Resultado de cada atendimento', 'Estoque sempre atualizado', 'Demo aberta para explorar']
 
   return (
     <section id="inicio" className="relative min-h-[100svh] bg-dark-grad flex items-center overflow-hidden pt-[76px] noise">
@@ -131,7 +131,7 @@ export default function Hero() {
                 <span className="absolute inset-0 rounded-full bg-teal animate-ping" />
                 <span className="relative w-2 h-2 rounded-full bg-teal" />
               </span>
-              Sistema de gestão para Home Care
+              Gestão financeira e assistencial para Home Care
             </div>
 
             <h1 className="font-display font-black text-[2.6rem] sm:text-5xl lg:text-[3.6rem] text-white leading-[1.06] tracking-tight">
@@ -148,8 +148,8 @@ export default function Hero() {
             </div>
 
             <p className="text-white/60 text-lg leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: '600ms' }}>
-              Prontuário do paciente, check-in e check-out geolocalizado, estoque, orçamentos,
-              indicadores e o portal onde o responsável assina os documentos — tudo em um único sistema.
+              Estoque, farmácia, orçamentos e faturamento conectados aos atendimentos. Saiba exatamente
+              quanto sua empresa ganha em cada visita — com o prontuário completo no mesmo sistema.
             </p>
 
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-2.5 mt-7 animate-fade-up" style={{ animationDelay: '700ms' }}>
@@ -180,9 +180,9 @@ export default function Hero() {
             onMouseMove={tilt.onMouseMove} onMouseLeave={tilt.onMouseLeave}>
             <div ref={tilt.ref} className="relative transition-transform duration-300 ease-out [transform-style:preserve-3d]">
               <DashboardMockup />
-              <FloatingBadge icon={MapPin} title="Check-in registrado" sub="42 m da residência" className="-top-7 -left-10" delay="0.4s" />
-              <FloatingBadge icon={FileSignature} title="Plano terapêutico assinado" sub="pelo responsável · portal" className="-bottom-12 -left-14" delay="1.6s" color="#52C48A" />
-              <FloatingBadge icon={ShieldCheck} title="Acesso liberado" sub="Evolução · Farmácia" className="-bottom-6 -right-10" delay="2.4s" color="#8b5cf6" />
+              <FloatingBadge icon={MapPin} title="Visita comprovada" sub="check-in a 42 m · pronta para faturar" className="-top-7 -left-10" delay="0.4s" />
+              <FloatingBadge icon={Boxes} title="Estoque atualizado" sub="Gaze estéril −2 pct · Helena F." className="-bottom-12 -left-14" delay="1.6s" color="#52C48A" />
+              <FloatingBadge icon={TrendingUp} title="Margem do atendimento" sub="Curativo · 40%" className="-bottom-6 -right-10" delay="2.4s" color="#8b5cf6" />
             </div>
           </div>
         </div>

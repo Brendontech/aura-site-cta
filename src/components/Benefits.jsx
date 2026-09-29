@@ -7,9 +7,9 @@ import { DEMO_URL } from '../config'
 const BENEFITS = [
   {
     icon: Wallet,
-    title: 'Faturamento com segurança',
-    desc: 'Check-in e check-out com a distância registrada mostram se a visita realmente aconteceu antes de você faturar.',
-    highlight: 'Divergências à vista',
+    title: 'Lucro real de cada atendimento',
+    desc: 'Receita, materiais, medicamentos e estoque conectados: você sabe quanto ganha em cada visita e fatura só o que foi comprovado por check-in e check-out.',
+    highlight: 'Faturamento sem perdas',
   },
   {
     icon: FileSignature,

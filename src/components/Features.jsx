@@ -211,6 +211,14 @@ function GestaoMockup() {
 
 const SHOWCASE = [
   {
+    icon: LayoutDashboard,
+    label: 'Estoque e financeiro',
+    title: 'Estoque, orçamento e faturamento conectados',
+    desc: 'Materiais, itens, equipamentos e mobília com saldo real. Orçamentos por operadora, farmácia ligada ao consumo e faturamento conferido pelas visitas realizadas.',
+    bullets: ['Estoque de materiais e equipamentos', 'Farmácia ligada ao faturamento', 'Orçamentos por operadora', 'Relatórios e indicadores'],
+    Mockup: GestaoMockup,
+  },
+  {
     icon: NotebookPen,
     label: 'Prontuário do paciente',
     title: 'Todo o cuidado do paciente em um prontuário',
@@ -233,14 +241,6 @@ const SHOWCASE = [
     desc: 'Primeiro, defina quais módulos do sistema cada profissional pode usar. Depois, vincule o profissional ao paciente e escolha quais módulos do prontuário ele acessa.',
     bullets: ['Permissões por módulo do sistema', 'Vínculo profissional × paciente', 'Permissões dentro do prontuário', 'Cada um vê só o que precisa'],
     Mockup: PermissoesMockup,
-  },
-  {
-    icon: LayoutDashboard,
-    label: 'Gestão da operação',
-    title: 'A operação inteira sob controle',
-    desc: 'Estoque, materiais, equipamentos, mobília, operadoras, orçamentos, relatórios e indicadores. Tudo o que a gestão do Home Care precisa, conectado aos atendimentos.',
-    bullets: ['Gerenciamento de estoque', 'Orçamentos e operadoras', 'Relatórios e indicadores', 'Materiais, equipamentos e mobília'],
-    Mockup: GestaoMockup,
   },
 ]
 
