@@ -42,7 +42,7 @@ export function DemoChooserProvider({ children }) {
 
             <div className="p-7 sm:p-10">
               <h2 id="demo-chooser-title" className="font-display font-black text-2xl sm:text-3xl text-navy pr-10">
-                Como você quer conhecer o <span className="gradient-text">Aura</span>?
+                Como você quer conhecer o <span className="gradient-text">Sanyti</span>?
               </h2>
               <p className="text-gray-500 mt-2">Explore por conta própria ou converse com nossa equipe.</p>
 

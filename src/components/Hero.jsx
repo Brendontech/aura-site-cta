@@ -25,7 +25,7 @@ function DashboardMockup() {
         <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
         <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
         <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-        <div className="flex-1 mx-4 bg-white/5 rounded-md px-3 py-1 text-[11px] text-white/30 text-center">aura · painel da operação</div>
+        <div className="flex-1 mx-4 bg-white/5 rounded-md px-3 py-1 text-[11px] text-white/30 text-center">sanyti · painel da operação</div>
       </div>
       <div className="flex h-[300px]">
         <div className="w-[108px] bg-navy/60 border-r border-white/5 p-2.5 flex flex-col gap-1">

@@ -10,11 +10,12 @@ const LINKS = [
   { label: 'Check-in',        id: 'presenca' },
   { label: 'Benefícios',      id: 'beneficios' },
   { label: 'Planos',          id: 'precos' },
+  { label: 'Ajuda',           to: '/ajuda' },
   { label: 'Contato',         to: '/contato' },
 ]
 
 // Páginas cujo topo é escuro: a navbar pode começar transparente
-const DARK_TOP = ['/', '/contato']
+const DARK_TOP = ['/', '/contato', '/ajuda']
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -42,7 +43,7 @@ export default function Navbar() {
 
   // Destaca o link da seção visível (scroll spy)
   useEffect(() => {
-    if (!isHome) { setActive(pathname === '/contato' ? 'contato' : null); return }
+    if (!isHome) { setActive(LINKS.some(l => l.to === pathname) ? pathname.slice(1) : null); return }
     const sections = LINKS.filter(l => l.id).map(l => document.getElementById(l.id)).filter(Boolean)
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id) })
@@ -75,22 +76,23 @@ export default function Navbar() {
       }`}>
         <div className="container-max">
           <div className={`flex items-center justify-between gap-6 transition-all duration-500 ${scrolled ? 'h-[64px]' : 'h-[76px]'}`}>
-            <Link to="/" aria-label="Aura Homecare — início" className="flex-shrink-0 group"
+            <Link to="/" aria-label="Sanyti — início" className="flex-shrink-0 group"
               onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) } }}>
               <div className="transition-transform duration-300 group-hover:scale-105">
-                <Logo className={`transition-all duration-500 ${scrolled ? 'h-9' : 'h-11'}`} />
+                <span className="xl:hidden"><Logo size="sm" compact /></span>
+                <span className="hidden xl:inline"><Logo size={scrolled ? 'sm' : 'md'} compact={scrolled} /></span>
               </div>
             </Link>
 
             {/* Links (desktop) */}
-            <div className="hidden lg:flex relative items-center gap-1">
+            <div className="hidden lg:flex relative items-center gap-0.5 xl:gap-1">
               {pill && (
                 <span className="absolute top-0 bottom-0 rounded-lg bg-white/10 transition-all duration-500 ease-out-expo"
                   style={{ left: pill.left, width: pill.width }} />
               )}
               {LINKS.map(({ label, id, to }) => {
-                const key = id || 'contato'
-                const cls = `relative text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-300 ${
+                const key = id || to.slice(1)
+                const cls = `relative whitespace-nowrap text-sm font-medium px-3 xl:px-4 py-2 rounded-lg transition-colors duration-300 ${
                   active === key ? 'text-white' : 'text-white/65 hover:text-white'
                 }`
                 return to ? (

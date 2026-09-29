@@ -138,3 +138,7 @@
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .rv, .word-rise > span { opacity: 1; transform: none; filter: none; }
 }
+
+/* Nós da molécula da logo pulsando suavemente */
+.logo-node { transform-box: fill-box; transform-origin: center; animation: nodePulse 3.2s ease-in-out infinite; }
+@keyframes nodePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }

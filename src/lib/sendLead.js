@@ -2,7 +2,7 @@ import { CONTACT_EMAIL, FORM_ENDPOINT } from '../config'
 
 const LABELS = {
   nome: 'Nome', empresa: 'Empresa', email: 'E-mail', telefone: 'Telefone',
-  pacientes: 'Pacientes', plano: 'Plano de interesse', mensagem: 'Mensagem',
+  pacientes: 'Pacientes', plano: 'Plano de interesse', ciclo: 'Cobrança', mensagem: 'Mensagem',
 }
 
 // Envia o lead via AJAX quando há endpoint configurado; caso contrário, cai no mailto.

@@ -7,6 +7,7 @@ import Benefits from '../components/Benefits'
 import Pricing from '../components/Pricing'
 import StatsBar from '../components/StatsBar'
 import Testimonials from '../components/Testimonials'
+import HelpTeaser from '../components/HelpTeaser'
 
 export default function HomePage() {
   return (
@@ -19,6 +20,7 @@ export default function HomePage() {
       <Benefits />
       <Testimonials />
       <Pricing />
+      <HelpTeaser />
     </>
   )
 }

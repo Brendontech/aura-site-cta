@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import { Mail, MessageCircle, Clock, Send, CheckCircle2, ChevronDown, MonitorPlay, ArrowUpRight, Loader2, Lock } from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Mail, MessageCircle, Clock, Send, CheckCircle2, ChevronDown, MonitorPlay, ArrowUpRight, Loader2, Lock, Sparkles } from 'lucide-react'
 import { Reveal, SpotlightCard } from '../components/ui'
 import { CONTACT_EMAIL, DEMO_URL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
 import { sendLead } from '../lib/sendLead'
+import { PLANS } from '../data/plans'
 
 const CHANNELS = [
   { icon: MessageCircle, label: 'WhatsApp', value: WHATSAPP_TXT, sub: 'O jeito mais rápido de falar com a gente', color: '#25D366', href: WHATSAPP_URL },
@@ -14,11 +16,19 @@ const FAQ = [
   ['Posso ver o sistema antes de contratar?', 'Sim. A demo é aberta: você entra no sistema e navega pelos módulos e pelo prontuário. É um ambiente só de visualização, então nada é criado ou alterado.'],
   ['Como funciona o check-in e check-out?', 'Próximo à residência, o profissional faz o check-in e o sistema registra a distância até o endereço do paciente. No check-out, o mesmo. Assim o faturamento sabe se a visita realmente aconteceu.'],
   ['Como o responsável assina os documentos?', 'Você cadastra o responsável e envia o login por e-mail ou WhatsApp. Ele acessa o portal, vê os documentos pendentes e assina pelo próprio sistema.'],
+  ['Meus dados ficam seguros?', 'Sim. Os dados de cada empresa ficam isolados, a comunicação é criptografada (HTTPS/TLS) e os dados de saúde são tratados como dados sensíveis, conforme a LGPD.'],
   ['Consigo limitar o que cada profissional acessa?', 'Sim, em duas camadas: por módulo do sistema e, dentro do prontuário, por paciente vinculado ao profissional.'],
 ]
 
-const PLANS_QUICK = ['Starter', 'Professional', 'Enterprise', 'Ainda não sei']
-const EMPTY = { nome: '', empresa: '', email: '', telefone: '', pacientes: '', plano: '', mensagem: '' }
+const PLANS_QUICK = [...PLANS.map(p => p.name), 'Ainda não sei']
+const CICLOS = ['Mensal', 'Anual']
+const EMPTY = { nome: '', empresa: '', email: '', telefone: '', pacientes: '', plano: '', ciclo: 'Mensal', mensagem: '' }
+
+// Plano vindo da seção de preços (?plano=Enterprise&ciclo=anual)
+function initialForm(params) {
+  const plano = PLANS.find(p => p.name.toLowerCase() === (params.get('plano') || '').toLowerCase())
+  return { ...EMPTY, plano: plano?.name || '', ciclo: params.get('ciclo') === 'anual' ? 'Anual' : 'Mensal' }
+}
 
 function maskPhone(v) {
   const d = v.replace(/\D/g, '').slice(0, 11)
@@ -65,7 +75,17 @@ function FaqItem({ q, a, open, onToggle }) {
 }
 
 export default function ContactPage() {
-  const [form, setForm]       = useState(EMPTY)
+  const [params] = useSearchParams()
+  const [form, setForm]       = useState(() => initialForm(params))
+  const firstField = useRef(null)
+  const selectedPlan = PLANS.find(p => p.name === form.plano)
+
+  // Veio de um plano: já foca no primeiro campo
+  useEffect(() => {
+    if (!params.get('plano')) return
+    const t = setTimeout(() => firstField.current?.focus({ preventScroll: true }), 700)
+    return () => clearTimeout(t)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [errors, setErrors]   = useState({})
   const [touched, setTouched] = useState({})
   const [status, setStatus]   = useState('idle') // idle | sending | sent | error
@@ -87,7 +107,7 @@ export default function ContactPage() {
     if (Object.keys(errs).length) return
     setStatus('sending')
     try {
-      const res = await sendLead(form, `Demonstração Aura Homecare — ${form.nome}${form.empresa ? ` (${form.empresa})` : ''}`)
+      const res = await sendLead({ ...form, ciclo: selectedPlan ? form.ciclo : '' }, `Demonstração Sanyti — ${form.nome}${form.empresa ? ` (${form.empresa})` : ''}`)
       setVia(res.via)
       setStatus('sent')
     } catch {
@@ -153,7 +173,7 @@ export default function ContactPage() {
                     <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary">
                       <MonitorPlay size={17} /> Explorar a demo enquanto isso
                     </a>
-                    <button onClick={() => { setForm(EMPTY); setTouched({}); setErrors({}); setStatus('idle') }}
+                    <button onClick={() => { setForm({ ...EMPTY, plano: form.plano, ciclo: form.ciclo }); setTouched({}); setErrors({}); setStatus('idle') }}
                       className="btn-ghost justify-center">
                       Enviar outra
                     </button>
@@ -164,9 +184,30 @@ export default function ContactPage() {
                   <h2 className="font-display font-black text-2xl sm:text-[1.7rem] text-navy">Solicite uma apresentação</h2>
                   <p className="text-gray-500 text-[15px] mt-1.5 mb-9">Preencha os dados e falaremos com você em breve.</p>
 
+                  {selectedPlan && (
+                    <div key={selectedPlan.name + form.ciclo} className="mb-8 relative overflow-hidden flex flex-col sm:flex-row sm:items-center gap-4 p-4 sm:p-5 rounded-2xl bg-dark-grad text-white animate-swap-in">
+                      <div className="absolute -right-10 -top-10 w-40 h-40 bg-teal/25 rounded-full blur-3xl" />
+                      <div className="relative w-11 h-11 rounded-xl bg-aura-grad flex items-center justify-center flex-shrink-0 shadow-teal"><Sparkles size={20} /></div>
+                      <div className="relative flex-1">
+                        <div className="text-white/55 text-xs font-semibold uppercase tracking-wider">Plano selecionado</div>
+                        <div className="font-display font-bold text-lg leading-tight mt-0.5">
+                          {selectedPlan.name} <span className="text-teal-light">· R$ {form.ciclo === 'Anual' ? selectedPlan.annual : selectedPlan.monthly}/mês</span>
+                        </div>
+                      </div>
+                      <div className="relative inline-flex bg-white/10 rounded-xl p-1 self-start sm:self-center">
+                        {CICLOS.map(c => (
+                          <button type="button" key={c} onClick={() => set('ciclo', c)}
+                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${form.ciclo === c ? 'bg-white text-navy' : 'text-white/70 hover:text-white'}`}>
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
                     <Field label="Nome completo *" error={touched.nome && errors.nome}>
-                      <input className={inputCls('nome')} placeholder="Seu nome" autoComplete="name" value={form.nome}
+                      <input ref={firstField} className={inputCls('nome')} placeholder="Seu nome" autoComplete="name" value={form.nome}
                         onChange={e => set('nome', e.target.value)} onBlur={() => blur('nome')} />
                     </Field>
                     <Field label="Empresa">
@@ -280,6 +321,9 @@ export default function ContactPage() {
                 {FAQ.map(([q, a], i) => (
                   <FaqItem key={q} q={q} a={a} open={faq === i} onToggle={() => setFaq(faq === i ? -1 : i)} />
                 ))}
+                <Link to="/ajuda" className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark hover:gap-2.5 transition-all mt-3">
+                  Mais dúvidas? Veja a Central de Ajuda <ArrowUpRight size={14} />
+                </Link>
               </div>
             </Reveal>
           </div>

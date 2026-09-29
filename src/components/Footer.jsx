@@ -9,6 +9,7 @@ const NAV = [
   ['Check-in e Check-out', '/#presenca'],
   ['Benefícios', '/#beneficios'],
   ['Planos e Preços', '/#precos'],
+  ['Central de Ajuda', '/ajuda'],
 ]
 
 export default function Footer() {
@@ -19,7 +20,7 @@ export default function Footer() {
       <div className="container-max relative pt-16 lg:pt-20 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr] gap-12 mb-14">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Logo className="h-14" />
+            <Logo size="lg" />
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mt-5">
               Sistema de gestão para empresas de atenção domiciliar: prontuário, check-in e check-out,
               estoque, orçamentos, indicadores e portal do responsável.
@@ -79,7 +80,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-white/30 text-xs text-center">
-          <p>© {year} Aura Homecare. Todos os direitos reservados.</p>
+          <p>© {year} Sanyti Homecare. Todos os direitos reservados.</p>
           <p>Feito com ❤️ para o Home Care brasileiro</p>
         </div>
       </div>
