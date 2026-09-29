@@ -40,7 +40,7 @@ function DemoBand() {
         <div>
           <div className="section-tag-dark"><MonitorPlay size={13} /> Demo aberta</div>
           <h3 className="font-display font-black text-3xl lg:text-4xl text-white leading-tight mt-5">
-            Veja o Aura por dentro,<br /><span className="gradient-text">agora mesmo.</span>
+            Veja o Sanyti por dentro,<br /><span className="gradient-text">agora mesmo.</span>
           </h3>
           <p className="text-white/60 text-lg mt-4 max-w-lg">
             Entre no ambiente de demonstração e navegue pelos módulos e pelo prontuário, no seu ritmo.
@@ -70,7 +70,7 @@ export default function Benefits() {
         <SectionHeader
           tag="Benefícios"
           title={<>Menos burocracia.<br /><span className="gradient-text">Mais cuidado.</span></>}
-          subtitle="O Aura organiza a operação para sua equipe dedicar tempo ao que realmente importa: o paciente."
+          subtitle="O Sanyti organiza a operação para sua equipe dedicar tempo ao que realmente importa: o paciente."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">

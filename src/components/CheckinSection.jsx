@@ -147,7 +147,7 @@ const TECH = [
   },
   {
     icon: ShieldCheck, tag: 'Assinatura Digital', title: 'Validade jurídica nos documentos',
-    desc: 'Prontuários, evoluções e prescrições assinados digitalmente com certificado ICP-Brasil.',
+    desc: 'Assinatura por imagem com QR code no dia a dia, ou certificado ICP-Brasil A1 com validade jurídica plena (Lei 14.063/2020).',
     visual: <SignatureDraw />, badge: ['✓ Certificado ICP-Brasil', 'Documento assinado e protegido'], color: 'teal',
   },
 ]

@@ -4,7 +4,7 @@ import { Reveal, SectionHeader, SpotlightCard } from './ui'
 
 const TESTIMONIALS = [
   {
-    text: 'O Aura transformou nossa operação. Reduzimos 3 funcionários administrativos e zeramos os erros de prescrição. O ROI foi em menos de 2 meses.',
+    text: 'O Sanyti transformou nossa operação. Reduzimos 3 funcionários administrativos e zeramos os erros de prescrição. O ROI foi em menos de 2 meses.',
     name: 'Dr. Rafael Andrade',
     role: 'Diretor — Cuidar Homecare SP',
     color: 'from-teal to-green',

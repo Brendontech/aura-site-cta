@@ -180,7 +180,7 @@ function GestaoMockup() {
       right={<LayoutDashboard size={16} className="text-teal" />}>
       <div ref={ref} className="p-5 min-h-[290px] grid grid-cols-2 gap-3">
         <div className="col-span-2 bg-white/[0.04] border border-white/5 rounded-xl p-3">
-          <div className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2">Visitas realizadas por semana</div>
+          <div className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2">Atendimentos por mês</div>
           <div className="flex items-end gap-1.5 h-16">
             {bars.map((h, i) => (
               <div key={i} className="flex-1 rounded-t-md transition-all duration-1000 ease-out-expo"

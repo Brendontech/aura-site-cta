@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { Suspense, lazy, useEffect, useRef } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -6,6 +6,8 @@ import FloatingButtons from './components/FloatingButtons'
 import HomePage from './pages/HomePage'
 import ContactPage from './pages/ContactPage'
 import { DemoChooserProvider } from './context/DemoChooser'
+
+const HelpPage = lazy(() => import('./pages/HelpPage'))
 
 // Vai para o topo ao trocar de página ou rola até a âncora (/#funcionalidades)
 function ScrollManager() {
@@ -45,6 +47,7 @@ export default function App() {
         <Routes>
           <Route path="/"        element={<HomePage />} />
           <Route path="/contato" element={<ContactPage />} />
+          <Route path="/ajuda"   element={<Suspense fallback={<div className="min-h-screen bg-navy" />}><HelpPage /></Suspense>} />
           <Route path="*"        element={<HomePage />} />
         </Routes>
       </main>

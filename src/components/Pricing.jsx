@@ -3,67 +3,8 @@ import { Link } from 'react-router-dom'
 import { Check, X, ChevronRight, Zap } from 'lucide-react'
 import { Reveal, SectionHeader } from './ui'
 import { WHATSAPP_URL } from '../config'
+import { PLANS } from '../data/plans'
 
-const PLANS = [
-  {
-    name: 'Starter',
-    desc: 'Para empresas começando a digitalizar o Home Care',
-    monthly: 197,
-    annual: 164,
-    featured: false,
-    features: [
-      { text: 'Até 30 pacientes',               ok: true },
-      { text: 'Até 5 usuários',                 ok: true },
-      { text: 'Prontuário e evolução',          ok: true },
-      { text: 'Check-in e check-out',           ok: true },
-      { text: 'Estoque e materiais',            ok: true },
-      { text: 'Relatórios',                     ok: true },
-      { text: 'Portal do responsável',          ok: false },
-      { text: 'Assinatura digital',             ok: false },
-      { text: 'Indicadores',                    ok: false },
-      { text: 'Suporte prioritário',            ok: false },
-    ],
-  },
-  {
-    name: 'Professional',
-    desc: 'Para operações em crescimento, com várias equipes',
-    monthly: 497,
-    annual: 414,
-    featured: true,
-    features: [
-      { text: 'Até 100 pacientes',              ok: true },
-      { text: 'Até 15 usuários',                ok: true },
-      { text: 'Prontuário completo',            ok: true },
-      { text: 'ABEMID, NEAD, PAD e complexidade', ok: true },
-      { text: 'Check-in e check-out',           ok: true },
-      { text: 'Portal do responsável',          ok: true },
-      { text: 'Relatórios e indicadores',       ok: true },
-      { text: 'Assinatura digital',             ok: true },
-      { text: 'Permissões em duas camadas',     ok: true },
-      { text: 'Bipagem EAN-13',                 ok: false },
-      { text: 'Suporte prioritário',            ok: false },
-    ],
-  },
-  {
-    name: 'Enterprise',
-    desc: 'Para grandes operações que precisam de tudo',
-    monthly: 997,
-    annual: 831,
-    featured: false,
-    features: [
-      { text: 'Pacientes ilimitados',           ok: true },
-      { text: 'Usuários ilimitados',            ok: true },
-      { text: 'Todos os módulos',               ok: true },
-      { text: 'Check-in e check-out',           ok: true },
-      { text: 'Portal do responsável',          ok: true },
-      { text: 'Assinatura digital ICP-Brasil',  ok: true },
-      { text: 'Bipagem EAN-13',                 ok: true },
-      { text: 'Relatórios e indicadores',       ok: true },
-      { text: 'Permissões em duas camadas',     ok: true },
-      { text: 'Suporte prioritário',            ok: true },
-    ],
-  },
-]
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false)
@@ -138,7 +79,7 @@ export default function Pricing() {
                       ))}
                     </ul>
 
-                    <Link to="/contato"
+                    <Link to={`/contato?plano=${name}${annual ? '&ciclo=anual' : ''}`}
                       className={`mt-auto w-full py-4 rounded-xl font-display font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 group ${
                         featured ? 'btn-primary' : 'bg-navy text-white hover:bg-navy-3 hover:-translate-y-0.5'
                       }`}>
