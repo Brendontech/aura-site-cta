@@ -75,12 +75,12 @@ export default function Navbar() {
         solid ? 'bg-navy/90 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.25)] border-b border-white/5' : 'bg-transparent border-b border-transparent'
       }`}>
         <div className="container-max">
-          <div className={`flex items-center justify-between gap-6 transition-all duration-500 ${scrolled ? 'h-[64px]' : 'h-[76px]'}`}>
-            <Link to="/" aria-label="Sanyti — início" className="flex-shrink-0 group"
+          <div className={`flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-6 transition-all duration-500 ${scrolled ? 'h-[64px]' : 'h-[76px]'}`}>
+            <Link to="/" aria-label="Sanyti — início" className="flex items-center justify-self-start flex-shrink-0 group"
               onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) } }}>
-              <div className="transition-transform duration-300 group-hover:scale-105">
-                <span className="xl:hidden"><Logo size="sm" compact /></span>
-                <span className="hidden xl:inline"><Logo size={scrolled ? 'sm' : 'md'} compact={scrolled} /></span>
+              <div className="flex items-center transition-transform duration-300 group-hover:scale-105">
+                <span className="flex xl:hidden"><Logo size="sm" compact /></span>
+                <span className="hidden xl:flex"><Logo size={scrolled ? 'sm' : 'md'} compact={scrolled} /></span>
               </div>
             </Link>
 
@@ -103,7 +103,7 @@ export default function Navbar() {
               })}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-self-end gap-3">
               <button onClick={openChooser} className="hidden sm:inline-flex btn-primary text-sm px-5 py-2.5">
                 Conheça o Sistema <ChevronRight size={15} />
               </button>
