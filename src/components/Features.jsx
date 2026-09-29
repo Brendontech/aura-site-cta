@@ -350,7 +350,7 @@ export default function Features() {
       <div className="container-max">
         <SectionHeader
           tag="Funcionalidades"
-          title={<>Tudo que o seu Home Care precisa,<br className="hidden sm:block" /> <span className="gradient-text">em um só sistema</span></>}
+          title={<>Tudo que o seu Home Care precisa,<br /> <span className="gradient-text">em um só sistema</span></>}
           subtitle="Do cadastro do paciente ao faturamento, com cada profissional acessando exatamente o que precisa."
         />
         <Showcase />

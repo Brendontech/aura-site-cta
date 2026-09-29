@@ -103,7 +103,7 @@ function Words({ text, start = 0, step = 70, className = '' }) {
 }
 
 export default function Hero() {
-  const phrases = ['Prontuário eletrônico', 'Check-in e check-out', 'Portal do responsável', 'Permissões por módulo']
+  const phrases = ['Prontuário eletrônico', 'Check-in e check-out', 'Bipagem EAN-13', 'Assinatura digital', 'Portal do responsável']
   const [phraseIdx, setPhraseIdx] = useState(0)
   const { open: openChooser } = useDemoChooser()
   const tilt = useTilt(6)
@@ -170,9 +170,9 @@ export default function Hero() {
             </div>
 
             <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/10 max-w-lg animate-fade-up" style={{ animationDelay: '950ms' }}>
-              <StatCounter target={20} suffix="+" label="módulos integrados" />
-              <StatCounter target={2}  label="camadas de permissão" />
-              <StatCounter target={100} suffix="%" label="online, sem instalação" />
+              <StatCounter target={87}  suffix="%" label="redução de tempo operacional" />
+              <StatCounter target={60}  suffix="%" label="menos custo administrativo" />
+              <StatCounter target={100} suffix="%" label="digital e seguro" />
             </div>
           </div>
 

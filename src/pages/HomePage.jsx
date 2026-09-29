@@ -5,15 +5,19 @@ import Features from '../components/Features'
 import CheckinSection from '../components/CheckinSection'
 import Benefits from '../components/Benefits'
 import Pricing from '../components/Pricing'
+import StatsBar from '../components/StatsBar'
+import Testimonials from '../components/Testimonials'
 
 export default function HomePage() {
   return (
     <>
       <Hero />
       <ModulesMarquee />
+      <StatsBar />
       <Features />
       <CheckinSection />
       <Benefits />
+      <Testimonials />
       <Pricing />
     </>
   )

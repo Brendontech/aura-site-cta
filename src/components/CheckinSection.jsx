@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { MapPin, Home, LogIn, LogOut, NotebookPen, Wallet, CheckCircle2, AlertTriangle, ChevronRight } from 'lucide-react'
+import { MapPin, Home, LogIn, LogOut, NotebookPen, Wallet, CheckCircle2, AlertTriangle, ChevronRight, Barcode, ShieldCheck } from 'lucide-react'
 import { Reveal } from './ui'
 import { useDemoChooser } from '../context/DemoChooser'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -101,6 +101,57 @@ function MapMockup() {
   )
 }
 
+
+// Leitura do código de barras com linha de varredura
+function BarcodeScan() {
+  return (
+    <div className="relative w-44 h-24 mx-auto px-3 pt-2">
+      <div className="flex items-end justify-center gap-[3px] h-16">
+        {[3,1,4,1,5,2,3,1,2,4,1,3,5,1,2,3,1,4,2,1,3,5,2].map((w, i) => (
+          <div key={i} className="bg-white/85 rounded-[1px] h-full" style={{ width: `${w}px` }} />
+        ))}
+      </div>
+      <div className="text-center text-white/50 text-[10px] font-mono mt-1 tracking-widest">7 891234 567895</div>
+      <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-teal to-transparent shadow-[0_0_12px_#2BBFB3] animate-scan" />
+      {['top-0 left-0 border-t-2 border-l-2', 'top-0 right-0 border-t-2 border-r-2', 'bottom-0 left-0 border-b-2 border-l-2', 'bottom-0 right-0 border-b-2 border-r-2'].map(c => (
+        <div key={c} className={`absolute w-4 h-4 border-teal rounded-[3px] ${c}`} />
+      ))}
+    </div>
+  )
+}
+
+// Assinatura sendo desenhada
+function SignatureDraw() {
+  const [ref, visible] = useScrollReveal(0.4)
+  return (
+    <div ref={ref} className="w-full max-w-[220px] mx-auto">
+      <svg className="w-full h-16" viewBox="0 0 160 40">
+        <defs>
+          <linearGradient id="sigGrad" x1="0%" x2="100%"><stop offset="0%" stopColor="#2BBFB3" /><stop offset="100%" stopColor="#52C48A" /></linearGradient>
+        </defs>
+        <path d="M10 30 C30 10, 50 35, 70 20 C90 5, 110 30, 130 15 C140 10, 148 18, 152 20" stroke="url(#sigGrad)" strokeWidth="2.5"
+          fill="none" strokeLinecap="round" pathLength="1"
+          style={{ strokeDasharray: 1, strokeDashoffset: visible ? 0 : 1, transition: 'stroke-dashoffset 2.2s cubic-bezier(.65,0,.35,1) .3s' }} />
+      </svg>
+      <div className="h-px bg-gradient-to-r from-teal/50 to-transparent" />
+      <div className="text-white/30 text-[9px] font-mono mt-1.5">SHA-256 · 2048-bit RSA</div>
+    </div>
+  )
+}
+
+const TECH = [
+  {
+    icon: Barcode, tag: 'Bipagem EAN-13', title: 'Medicamento certo, no paciente certo',
+    desc: 'Na administração domiciliar, o profissional bipa o código de barras e o sistema confere o medicamento.',
+    visual: <BarcodeScan />, badge: ['✓ Medicamento verificado', 'Metformina 850 mg · Lote 2024A'], color: 'green',
+  },
+  {
+    icon: ShieldCheck, tag: 'Assinatura Digital', title: 'Validade jurídica nos documentos',
+    desc: 'Prontuários, evoluções e prescrições assinados digitalmente com certificado ICP-Brasil.',
+    visual: <SignatureDraw />, badge: ['✓ Certificado ICP-Brasil', 'Documento assinado e protegido'], color: 'teal',
+  },
+]
+
 export default function CheckinSection() {
   const { open: openChooser } = useDemoChooser()
   return (
@@ -151,6 +202,28 @@ export default function CheckinSection() {
           <Reveal variant="scale" delay={150}>
             <MapMockup />
           </Reveal>
+        </div>
+
+        {/* Bipagem + assinatura digital */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 mt-24 lg:mt-32">
+          {TECH.map(({ icon: Icon, tag, title, desc, visual, badge, color }, i) => (
+            <Reveal key={tag} delay={i * 120}>
+              <div className="h-full grid sm:grid-cols-[1fr_1.1fr] gap-6 items-center p-6 lg:p-8 rounded-3xl bg-white/[0.04] border border-white/10 hover:border-teal/30 hover:bg-white/[0.06] transition-all duration-300 group">
+                <div className="bg-navy/60 rounded-2xl border border-white/5 p-4 flex flex-col gap-4">
+                  {visual}
+                  <div className={color === 'green' ? 'p-2.5 rounded-xl bg-green/10 border border-green/20' : 'p-2.5 rounded-xl bg-teal/10 border border-teal/20'}>
+                    <div className={`text-[11px] font-bold ${color === 'green' ? 'text-green' : 'text-teal'}`}>{badge[0]}</div>
+                    <div className="text-white/40 text-[10px] mt-0.5">{badge[1]}</div>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-teal text-xs font-bold uppercase tracking-widest flex items-center gap-2"><Icon size={14} /> {tag}</div>
+                  <h3 className="font-display font-bold text-white text-xl mt-3 leading-snug">{title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed mt-2">{desc}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

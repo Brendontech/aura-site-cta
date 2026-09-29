@@ -1,12 +1,13 @@
 import {
   Package, Building2, Calculator, Sofa, AlertTriangle, FileBarChart, LineChart, Stethoscope,
   Contact, ClipboardCheck, FileLock2, Boxes, Wallet,
-  Pill, NotebookPen, Target, ClipboardList, Gauge, Layers, UsersRound, MapPin, ShieldCheck,
+  Pill, NotebookPen, Barcode, FileSignature, Target, ClipboardList, Gauge, Layers, UsersRound, MapPin, ShieldCheck,
 } from 'lucide-react'
 
 // Módulos de gestão da empresa
 export const GESTAO = [
   { icon: MapPin,         title: 'Check-in e Check-out', desc: 'Presença registrada com a distância até a residência do paciente' },
+  { icon: FileSignature,  title: 'Assinatura Digital',   desc: 'Documentos assinados com certificado ICP-Brasil' },
   { icon: Wallet,         title: 'Financeiro',           desc: 'Faturamento conferido com base nas visitas registradas' },
   { icon: Boxes,          title: 'Estoque',              desc: 'Gerenciamento do estoque da operação' },
   { icon: Package,        title: 'Materiais',            desc: 'Cadastro dos materiais utilizados nos atendimentos' },
@@ -26,6 +27,7 @@ export const GESTAO = [
 // Módulos dentro do prontuário do paciente
 export const PRONTUARIO = [
   { icon: NotebookPen,    title: 'Evolução',             desc: 'Registro de evolução do paciente pela equipe' },
+  { icon: Barcode,        title: 'Bipagem EAN-13',       desc: 'Checagem do medicamento por código de barras na administração' },
   { icon: Pill,           title: 'Farmácia',             desc: 'Medicamentos que o paciente está utilizando' },
   { icon: Target,         title: 'Plano Terapêutico',    desc: 'Plano de cuidado do paciente' },
   { icon: ClipboardList,  title: 'Avaliação Inicial',    desc: 'Avaliação de entrada do paciente' },

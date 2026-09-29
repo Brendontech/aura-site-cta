@@ -15,7 +15,7 @@ export function Reveal({ as: Tag = 'div', variant = 'up', delay = 0, className =
 // Cabeçalho padrão das seções (tag + título + subtítulo), com espaçamento consistente
 export function SectionHeader({ tag, title, subtitle, dark = false, className = '' }) {
   return (
-    <div className={`text-center max-w-3xl mx-auto mb-14 lg:mb-20 ${className}`}>
+    <div className={`text-center max-w-4xl mx-auto mb-14 lg:mb-20 ${className}`}>
       <Reveal>
         <div className={dark ? 'section-tag-dark' : 'section-tag'}>{tag}</div>
       </Reveal>

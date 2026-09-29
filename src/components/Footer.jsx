@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MessageCircle, Mail, Phone, MapPin, ShieldCheck, FileSignature, MonitorPlay, ArrowUpRight } from 'lucide-react'
+import { MessageCircle, Mail, Phone, MapPin, ShieldCheck, FileSignature, MonitorPlay, ArrowUpRight, Barcode } from 'lucide-react'
 import Logo from './Logo'
 import { CONTACT_EMAIL, DEMO_URL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
 
@@ -69,7 +69,8 @@ export default function Footer() {
           {[
             { icon: MapPin,        label: 'Check-in e check-out com distância' },
             { icon: ShieldCheck,   label: 'Permissões em duas camadas' },
-            { icon: FileSignature, label: 'Assinatura pelo portal do responsável' },
+            { icon: FileSignature, label: 'Assinatura digital ICP-Brasil' },
+            { icon: Barcode,       label: 'Bipagem EAN-13' },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex items-center gap-2 text-white/40 text-xs font-medium">
               <Icon size={14} className="text-teal/70" /> {label}
