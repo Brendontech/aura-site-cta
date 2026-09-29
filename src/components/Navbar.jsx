@@ -7,8 +7,8 @@ import { DEMO_URL } from '../config'
 
 const LINKS = [
   { label: 'Funcionalidades', id: 'funcionalidades' },
+  { label: 'Financeiro',      id: 'financeiro' },
   { label: 'Check-in',        id: 'presenca' },
-  { label: 'Benefícios',      id: 'beneficios' },
   { label: 'Planos',          id: 'precos' },
   { label: 'Ajuda',           to: '/ajuda' },
   { label: 'Contato',         to: '/contato' },

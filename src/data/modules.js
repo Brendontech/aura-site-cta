@@ -6,19 +6,19 @@ import {
 
 // Módulos de gestão da empresa
 export const GESTAO = [
+  { icon: Wallet,         title: 'Financeiro',           desc: 'Faturamento conferido pelas visitas e resultado por atendimento' },
+  { icon: Boxes,          title: 'Estoque',              desc: 'Materiais, itens, equipamentos e mobília com saldo real' },
+  { icon: Calculator,     title: 'Orçamentos',           desc: 'Por procedimento e operadora, com kits de materiais' },
   { icon: MapPin,         title: 'Check-in e Check-out', desc: 'Presença registrada com a distância até a residência do paciente' },
   { icon: CalendarDays,   title: 'Agenda',               desc: 'Agendamentos, agendamento por período e lembrete 30 min antes' },
   { icon: FileText,       title: 'Prescrições',          desc: 'Prescrição geral, de materiais e de exames, com folha de checagem' },
   { icon: FileSignature,  title: 'Assinatura Digital',   desc: 'Por imagem ou com certificado ICP-Brasil A1 (Lei 14.063/2020)' },
   { icon: QrCode,         title: 'QR Code de Validação', desc: 'Qualquer pessoa confere a autenticidade do documento' },
   { icon: BellRing,       title: 'Notificações Push',    desc: 'Alertas de agendamentos, lembretes e intercorrências' },
-  { icon: Wallet,         title: 'Financeiro',           desc: 'Faturamento conferido com base nas visitas registradas' },
-  { icon: Boxes,          title: 'Estoque',              desc: 'Gerenciamento do estoque da operação' },
   { icon: Package,        title: 'Materiais',            desc: 'Cadastro dos materiais utilizados nos atendimentos' },
   { icon: Stethoscope,    title: 'Equipamentos',         desc: 'Cadastro e controle dos equipamentos da operação' },
   { icon: Sofa,           title: 'Mobília',              desc: 'Controle da mobília da operação' },
   { icon: Building2,      title: 'Operadoras',           desc: 'Cadastro das operadoras e convênios atendidos' },
-  { icon: Calculator,     title: 'Orçamentos',           desc: 'Criação e gerenciamento de orçamentos' },
   { icon: LineChart,      title: 'Indicadores',          desc: 'Atendimentos, pacientes ativos, internações, LPP, quedas e satisfação' },
   { icon: FileBarChart,   title: 'Relatórios',           desc: 'Relatórios da operação reunidos em um só lugar' },
   { icon: AlertTriangle,  title: 'Avaliação de Acidente', desc: 'Registro e avaliação de acidentes' },

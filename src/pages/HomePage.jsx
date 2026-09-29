@@ -8,6 +8,7 @@ import Pricing from '../components/Pricing'
 import StatsBar from '../components/StatsBar'
 import Testimonials from '../components/Testimonials'
 import HelpTeaser from '../components/HelpTeaser'
+import FinanceSection from '../components/FinanceSection'
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Hero />
       <ModulesMarquee />
       <StatsBar />
+      <FinanceSection />
       <Features />
       <CheckinSection />
       <Benefits />

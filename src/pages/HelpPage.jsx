@@ -234,9 +234,9 @@ export default function HelpPage() {
           </Reveal>
         )}
 
-        <div className="grid lg:grid-cols-[250px_1fr] gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[250px_minmax(0,1fr)] gap-8 lg:gap-10 items-start">
           {/* Categorias */}
-          <aside className="lg:sticky lg:top-24">
+          <aside className="lg:sticky lg:top-24 min-w-0">
             <div className="hidden lg:flex flex-col gap-0.5 bg-white rounded-2xl border border-gray-100 p-2.5">
               <CatButton id="todos" label="Todos" Icon={BookOpen} n={ARTICLES.length} />
               {CATS.map(c => <CatButton key={c.id} id={c.id} label={c.label} Icon={CAT_ICONS[c.id] || BookOpen} n={counts[c.id]} />)}
@@ -254,7 +254,7 @@ export default function HelpPage() {
           </aside>
 
           {/* Artigos */}
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between gap-4 mb-4 text-sm text-gray-500">
               <span aria-live="polite">
                 {terms.length
