@@ -1,247 +1,287 @@
 import React, { useState } from 'react'
-import { Mail, Phone, MapPin, MessageCircle, Clock, Send, CheckCircle, ChevronRight } from 'lucide-react'
+import { Mail, MessageCircle, Clock, Send, CheckCircle2, ChevronDown, MonitorPlay, ArrowUpRight, Loader2, Lock } from 'lucide-react'
+import { Reveal, SpotlightCard } from '../components/ui'
+import { CONTACT_EMAIL, DEMO_URL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
+import { sendLead } from '../lib/sendLead'
 
 const CHANNELS = [
-  {
-    icon: MessageCircle,
-    label: 'WhatsApp',
-    value: '(61) 99251-0045',
-    sub: 'Resposta em minutos',
-    color: '#25D366',
-    bg: 'rgba(37,211,102,0.1)',
-    href: 'https://wa.me/5561992510045',
-  },
-  {
-    icon: Mail,
-    label: 'E-mail',
-    value: 'contato@aurahomecare.com.br',
-    sub: 'Resposta em até 2h úteis',
-    color: '#2BBFB3',
-    bg: 'rgba(43,191,179,0.1)',
-    href: 'mailto:contato@aurahomecare.com.br',
-  },
-  {
-    icon: Clock,
-    label: 'Horário de atendimento',
-    value: 'Seg–Sex, 8h às 18h',
-    sub: 'Suporte Enterprise 24/7',
-    color: '#8b5cf6',
-    bg: 'rgba(139,92,246,0.1)',
-    href: null,
-  },
+  { icon: MessageCircle, label: 'WhatsApp', value: WHATSAPP_TXT, sub: 'O jeito mais rápido de falar com a gente', color: '#25D366', href: WHATSAPP_URL },
+  { icon: Mail, label: 'E-mail', value: CONTACT_EMAIL, sub: 'Para propostas e dúvidas detalhadas', color: '#2BBFB3', href: `mailto:${CONTACT_EMAIL}` },
+  { icon: Clock, label: 'Horário de atendimento', value: 'Seg–Sex, 8h às 18h', sub: 'Horário de Brasília', color: '#8b5cf6', href: null },
 ]
 
-const PLANS_QUICK = ['Starter — R$197/mês', 'Professional — R$497/mês', 'Enterprise — R$997/mês', 'Não sei ainda']
+const FAQ = [
+  ['Posso ver o sistema antes de contratar?', 'Sim. A demo é aberta: você entra no sistema e navega pelos módulos e pelo prontuário. É um ambiente só de visualização, então nada é criado ou alterado.'],
+  ['Como funciona o check-in e check-out?', 'Próximo à residência, o profissional faz o check-in e o sistema registra a distância até o endereço do paciente. No check-out, o mesmo. Assim o faturamento sabe se a visita realmente aconteceu.'],
+  ['Como o responsável assina os documentos?', 'Você cadastra o responsável e envia o login por e-mail ou WhatsApp. Ele acessa o portal, vê os documentos pendentes e assina pelo próprio sistema.'],
+  ['Consigo limitar o que cada profissional acessa?', 'Sim, em duas camadas: por módulo do sistema e, dentro do prontuário, por paciente vinculado ao profissional.'],
+]
+
+const PLANS_QUICK = ['Starter', 'Professional', 'Enterprise', 'Ainda não sei']
+const EMPTY = { nome: '', empresa: '', email: '', telefone: '', pacientes: '', plano: '', mensagem: '' }
+
+function maskPhone(v) {
+  const d = v.replace(/\D/g, '').slice(0, 11)
+  if (d.length <= 2) return d.length ? `(${d}` : ''
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
+}
+
+function validate(form) {
+  const e = {}
+  if (!form.nome.trim()) e.nome = 'Informe seu nome'
+  if (!form.email.trim()) e.email = 'Informe seu e-mail'
+  else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'E-mail inválido'
+  if (form.telefone.replace(/\D/g, '').length < 10) e.telefone = 'Informe um telefone com DDD'
+  return e
+}
+
+function Field({ label, error, children }) {
+  return (
+    <label className="block">
+      <span className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">{label}</span>
+      {children}
+      <span className={`block text-red-500 text-xs overflow-hidden transition-all duration-300 ${error ? 'max-h-6 mt-1.5 opacity-100' : 'max-h-0 opacity-0'}`}>{error}</span>
+    </label>
+  )
+}
+
+function FaqItem({ q, a, open, onToggle }) {
+  return (
+    <div className={`border-b border-teal/10 last:border-0`}>
+      <button onClick={onToggle} aria-expanded={open}
+        className="w-full flex items-center justify-between gap-4 py-4 text-left text-navy text-sm font-bold hover:text-teal-dark transition-colors">
+        {q}
+        <ChevronDown size={16} className={`flex-shrink-0 text-teal transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <div className={`grid transition-all duration-500 ease-out-expo ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+        <div className="overflow-hidden">
+          <p className="text-gray-500 text-sm leading-relaxed pb-4">{a}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function ContactPage() {
-  const [form, setForm] = useState({
-    nome: '', empresa: '', email: '', telefone: '',
-    pacientes: '', plano: '', mensagem: ''
-  })
-  const [errors, setErrors] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [form, setForm]       = useState(EMPTY)
+  const [errors, setErrors]   = useState({})
+  const [touched, setTouched] = useState({})
+  const [status, setStatus]   = useState('idle') // idle | sending | sent | error
+  const [via, setVia]         = useState(null)
+  const [faq, setFaq]         = useState(0)
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
-
-  const validate = () => {
-    const e = {}
-    if (!form.nome.trim())    e.nome    = 'Nome obrigatório'
-    if (!form.email.trim())   e.email   = 'E-mail obrigatório'
-    if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'E-mail inválido'
-    if (!form.telefone.trim()) e.telefone = 'Telefone obrigatório'
-    setErrors(e)
-    return Object.keys(e).length === 0
+  const set = (k, v) => {
+    const next = { ...form, [k]: k === 'telefone' ? maskPhone(v) : v }
+    setForm(next)
+    if (touched[k]) setErrors(validate(next))
   }
+  const blur = (k) => { setTouched(t => ({ ...t, [k]: true })); setErrors(validate(form)) }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!validate()) return
-    setLoading(true)
-    // Mailto fallback
-    const subject = encodeURIComponent(`Demo Aura Homecare — ${form.nome} (${form.empresa})`)
-    const body = encodeURIComponent(
-      `Nome: ${form.nome}\nEmpresa: ${form.empresa}\nE-mail: ${form.email}\nTelefone: ${form.telefone}\nPacientes: ${form.pacientes}\nPlano de interesse: ${form.plano}\n\nMensagem:\n${form.mensagem}`
-    )
-    setTimeout(() => {
-      window.location.href = `mailto:contato@aurahomecare.com.br?subject=${subject}&body=${body}`
-      setLoading(false)
-      setSent(true)
-    }, 800)
+    const errs = validate(form)
+    setErrors(errs)
+    setTouched({ nome: true, email: true, telefone: true })
+    if (Object.keys(errs).length) return
+    setStatus('sending')
+    try {
+      const res = await sendLead(form, `Demonstração Aura Homecare — ${form.nome}${form.empresa ? ` (${form.empresa})` : ''}`)
+      setVia(res.via)
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   const inputCls = (field) =>
-    `w-full px-4 py-3 bg-gray-50 border rounded-xl text-navy text-sm outline-none transition-all font-body placeholder-gray-300 ${
-      errors[field]
-        ? 'border-red-400 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-        : 'border-gray-200 focus:border-teal focus:ring-2 focus:ring-teal/10 focus:bg-white'
+    `w-full px-4 py-3.5 bg-gray-50 border rounded-xl text-navy text-[15px] outline-none transition-all duration-200 font-body placeholder-gray-400 ${
+      errors[field] && touched[field]
+        ? 'border-red-300 focus:border-red-400 focus:ring-4 focus:ring-red-100'
+        : 'border-gray-200 hover:border-gray-300 focus:border-teal focus:ring-4 focus:ring-teal/10 focus:bg-white'
     }`
 
   return (
-    <div className="min-h-screen bg-white pt-[70px]">
-      {/* Header */}
-      <div className="bg-dark-grad relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage:'radial-gradient(circle at 25% 60%, #2BBFB3, transparent 50%), radial-gradient(circle at 75% 40%, #52C48A, transparent 50%)' }} />
-        <div className="container-max py-20 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/25 text-teal-light text-xs font-bold px-4 py-2 rounded-full mb-6">
-            📩 Entre em Contato
-          </div>
-          <h1 className="font-display font-black text-4xl lg:text-5xl text-white mb-5 leading-tight">
+    <div className="bg-white">
+      {/* Cabeçalho escuro — começa atrás da navbar */}
+      <header className="bg-dark-grad relative overflow-hidden pt-[76px] noise">
+        <div className="absolute inset-0 bg-hero-mesh pointer-events-none" />
+        <div className="absolute top-10 right-[10%] w-80 h-80 bg-teal/10 rounded-full blur-[100px] animate-float-slow pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{ backgroundImage: 'linear-gradient(rgba(43,191,179,1) 1px, transparent 1px), linear-gradient(90deg, rgba(43,191,179,1) 1px, transparent 1px)', backgroundSize: '64px 64px', maskImage: 'radial-gradient(ellipse at 50% 40%, #000 20%, transparent 70%)' }} />
+        <div className="container-max pt-16 pb-28 lg:pt-20 lg:pb-32 relative z-10 text-center">
+          <div className="section-tag-dark animate-fade-up">Entre em contato</div>
+          <h1 className="font-display font-black text-[2.4rem] sm:text-5xl lg:text-[3.4rem] text-white mt-6 leading-[1.08] tracking-tight animate-fade-up" style={{ animationDelay: '100ms' }}>
             Pronto para transformar<br />
-            <span className="bg-aura-grad bg-clip-text text-transparent">seu homecare?</span>
+            <span className="gradient-text">seu Home Care?</span>
           </h1>
-          <p className="text-white/55 text-lg max-w-lg mx-auto">
-            Solicite uma demonstração gratuita. Nossa equipe responde em até 2 horas nos dias úteis.
+          <p className="text-white/60 text-lg max-w-xl mx-auto mt-6 animate-fade-up" style={{ animationDelay: '200ms' }}>
+            Solicite uma apresentação com a nossa equipe ou explore a demo agora mesmo.
           </p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 40" fill="none" preserveAspectRatio="none">
-            <path d="M0 40L1440 40L1440 10C1200 40 900 0 720 10C540 20 240 0 0 10Z" fill="white"/>
+        <div className="absolute bottom-0 left-0 right-0 leading-[0]">
+          <svg viewBox="0 0 1440 60" className="w-full h-[40px] sm:h-[60px]" fill="none" preserveAspectRatio="none">
+            <path d="M0 60L1440 60L1440 20C1200 60 900 0 720 20C540 40 240 0 0 20Z" fill="white" />
           </svg>
         </div>
-      </div>
+      </header>
 
-      <div className="container-max py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="container-max relative z-10 -mt-12 lg:-mt-16 pb-24 lg:pb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-10 items-start">
 
-          {/* LEFT: channels */}
-          <div className="flex flex-col gap-6">
-            {CHANNELS.map(({ icon: Icon, label, value, sub, color, bg, href }) => (
-              <div key={label}>
-                {href ? (
-                  <a href={href} target={href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer"
-                    className="flex items-center gap-4 p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:border-teal/30 hover:bg-teal-soft/30 hover:-translate-y-0.5 transition-all group">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
-                      style={{ background: bg }}>
-                      <Icon size={22} style={{ color }} />
+          {/* Formulário (primeiro no mobile) */}
+          <Reveal variant="up" className="lg:order-2">
+            <div className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-[0_30px_80px_rgba(13,27,42,0.12)]">
+              {status === 'sent' ? (
+                <div className="flex flex-col items-center justify-center text-center py-14 gap-5 animate-swap-in">
+                  <div className="relative w-20 h-20 rounded-full bg-teal-soft flex items-center justify-center text-teal">
+                    <span className="absolute inset-0 rounded-full bg-teal/20 animate-ping-slow" />
+                    <CheckCircle2 size={40} className="relative" />
+                  </div>
+                  <div>
+                    <h2 className="font-display font-black text-2xl text-navy">
+                      {via === 'mailto' ? 'Quase lá!' : 'Mensagem enviada!'}
+                    </h2>
+                    <p className="text-gray-500 mt-2 max-w-sm">
+                      {via === 'mailto'
+                        ? 'Abrimos seu aplicativo de e-mail com a mensagem pronta. É só clicar em enviar.'
+                        : 'Recebemos seus dados e entraremos em contato em breve.'}
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 mt-2">
+                    <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary">
+                      <MonitorPlay size={17} /> Explorar a demo enquanto isso
+                    </a>
+                    <button onClick={() => { setForm(EMPTY); setTouched({}); setErrors({}); setStatus('idle') }}
+                      className="btn-ghost justify-center">
+                      Enviar outra
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate>
+                  <h2 className="font-display font-black text-2xl sm:text-[1.7rem] text-navy">Solicite uma apresentação</h2>
+                  <p className="text-gray-500 text-[15px] mt-1.5 mb-9">Preencha os dados e falaremos com você em breve.</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
+                    <Field label="Nome completo *" error={touched.nome && errors.nome}>
+                      <input className={inputCls('nome')} placeholder="Seu nome" autoComplete="name" value={form.nome}
+                        onChange={e => set('nome', e.target.value)} onBlur={() => blur('nome')} />
+                    </Field>
+                    <Field label="Empresa">
+                      <input className={inputCls('empresa')} placeholder="Nome da empresa" autoComplete="organization" value={form.empresa}
+                        onChange={e => set('empresa', e.target.value)} />
+                    </Field>
+                    <Field label="E-mail *" error={touched.email && errors.email}>
+                      <input type="email" className={inputCls('email')} placeholder="seu@email.com" autoComplete="email" value={form.email}
+                        onChange={e => set('email', e.target.value)} onBlur={() => blur('email')} />
+                    </Field>
+                    <Field label="Telefone / WhatsApp *" error={touched.telefone && errors.telefone}>
+                      <input type="tel" inputMode="tel" className={inputCls('telefone')} placeholder="(00) 00000-0000" autoComplete="tel" value={form.telefone}
+                        onChange={e => set('telefone', e.target.value)} onBlur={() => blur('telefone')} />
+                    </Field>
+                    <Field label="Quantos pacientes?">
+                      <select className={inputCls('pacientes')} value={form.pacientes} onChange={e => set('pacientes', e.target.value)}>
+                        <option value="">Selecione...</option>
+                        <option>Até 30 pacientes</option>
+                        <option>31 a 100 pacientes</option>
+                        <option>Mais de 100 pacientes</option>
+                      </select>
+                    </Field>
+                    <Field label="Plano de interesse">
+                      <select className={inputCls('plano')} value={form.plano} onChange={e => set('plano', e.target.value)}>
+                        <option value="">Selecione...</option>
+                        {PLANS_QUICK.map(p => <option key={p}>{p}</option>)}
+                      </select>
+                    </Field>
+                    <div className="sm:col-span-2">
+                      <Field label="Mensagem (opcional)">
+                        <textarea className={`${inputCls('mensagem')} resize-none`} rows={4}
+                          placeholder="Conte sobre sua operação, dúvidas ou necessidades específicas..."
+                          value={form.mensagem} onChange={e => set('mensagem', e.target.value)} />
+                      </Field>
                     </div>
-                    <div>
-                      <div className="font-display font-bold text-navy text-sm mb-0.5">{label}</div>
-                      <div className="text-gray-600 text-sm font-medium">{value}</div>
-                      <div className="text-gray-400 text-xs mt-0.5">{sub}</div>
-                    </div>
-                  </a>
-                ) : (
-                  <div className="flex items-center gap-4 p-5 bg-gray-50 border border-gray-100 rounded-2xl">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: bg }}>
-                      <Icon size={22} style={{ color }} />
-                    </div>
-                    <div>
-                      <div className="font-display font-bold text-navy text-sm mb-0.5">{label}</div>
-                      <div className="text-gray-600 text-sm font-medium">{value}</div>
-                      <div className="text-gray-400 text-xs mt-0.5">{sub}</div>
-                    </div>
                   </div>
-                )}
-              </div>
-            ))}
 
-            {/* WhatsApp CTA */}
-            <a href="https://wa.me/5561992510045" target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-3 py-4 bg-[#25D366] text-white font-display font-bold rounded-2xl hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl">
-              <MessageCircle size={20} /> Chamar no WhatsApp
-            </a>
-
-            {/* FAQ mini */}
-            <div className="p-5 bg-teal-soft rounded-2xl border border-teal/15">
-              <div className="font-display font-bold text-teal-dark text-sm mb-3">❓ Perguntas rápidas</div>
-              {[
-                ['Tem período de teste?', '14 dias grátis sem cartão'],
-                ['Funciona no celular?', 'App iOS e Android incluído'],
-                ['Meus dados são seguros?', 'Criptografia + backup diário'],
-              ].map(([q, a]) => (
-                <div key={q} className="mb-3 last:mb-0">
-                  <div className="text-navy text-xs font-bold">{q}</div>
-                  <div className="text-gray-500 text-xs mt-0.5">{a}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT: form */}
-          <div className="lg:col-span-2">
-            {sent ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-20 gap-6">
-                <div className="w-20 h-20 rounded-full bg-teal-soft flex items-center justify-center">
-                  <CheckCircle size={40} className="text-teal" />
-                </div>
-                <div>
-                  <h2 className="font-display font-black text-2xl text-navy mb-2">Mensagem enviada! 🎉</h2>
-                  <p className="text-gray-500">Entraremos em contato em até 2 horas nos dias úteis.</p>
-                </div>
-                <button onClick={() => setSent(false)}
-                  className="inline-flex items-center gap-2 border-2 border-teal text-teal font-display font-bold px-6 py-3 rounded-xl hover:bg-teal/5 transition-all">
-                  Enviar outra mensagem
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate className="bg-white border border-gray-100 rounded-3xl p-8 shadow-card">
-                <h2 className="font-display font-black text-2xl text-navy mb-1">Solicite uma demonstração</h2>
-                <p className="text-gray-400 text-sm mb-8">Preencha o formulário e falaremos em breve.</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Nome completo *</label>
-                    <input className={inputCls('nome')} placeholder="Seu nome" value={form.nome} onChange={e => set('nome', e.target.value)} />
-                    {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Empresa</label>
-                    <input className={inputCls('empresa')} placeholder="Nome da empresa" value={form.empresa} onChange={e => set('empresa', e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">E-mail *</label>
-                    <input type="email" className={inputCls('email')} placeholder="seu@email.com" value={form.email} onChange={e => set('email', e.target.value)} />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Telefone / WhatsApp *</label>
-                    <input className={inputCls('telefone')} placeholder="(00) 00000-0000" value={form.telefone} onChange={e => set('telefone', e.target.value)} />
-                    {errors.telefone && <p className="text-red-500 text-xs mt-1">{errors.telefone}</p>}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Quantos pacientes?</label>
-                    <select className={inputCls('pacientes')} value={form.pacientes} onChange={e => set('pacientes', e.target.value)}>
-                      <option value="">Selecione...</option>
-                      <option>Até 30 pacientes</option>
-                      <option>31 a 100 pacientes</option>
-                      <option>Mais de 100 pacientes</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Plano de interesse</label>
-                    <select className={inputCls('plano')} value={form.plano} onChange={e => set('plano', e.target.value)}>
-                      <option value="">Selecione...</option>
-                      {PLANS_QUICK.map(p => <option key={p}>{p}</option>)}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Mensagem (opcional)</label>
-                  <textarea className={inputCls('mensagem')} rows={4} placeholder="Conte sobre sua operação, dúvidas ou necessidades específicas..."
-                    value={form.mensagem} onChange={e => set('mensagem', e.target.value)} />
-                </div>
-
-                <button type="submit" disabled={loading}
-                  className="w-full py-4 bg-aura-grad text-white font-display font-bold text-base rounded-xl flex items-center justify-center gap-3 shadow-teal hover:shadow-teal-lg hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
-                  {loading ? (
-                    <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Enviando...</>
-                  ) : (
-                    <><Send size={18} /> 🚀 Solicitar Demonstração Gratuita</>
+                  {status === 'error' && (
+                    <p className="mt-5 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 animate-swap-in">
+                      Não conseguimos enviar agora. Tente novamente ou fale pelo{' '}
+                      <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="font-bold underline">WhatsApp</a>.
+                    </p>
                   )}
-                </button>
-                <p className="text-center text-gray-300 text-xs mt-3">Ao enviar, você concorda com nossa Política de Privacidade</p>
-              </form>
-            )}
+
+                  <button type="submit" disabled={status === 'sending'}
+                    className="btn-primary w-full mt-8 py-4 text-base disabled:opacity-60 disabled:cursor-wait disabled:hover:translate-y-0">
+                    {status === 'sending'
+                      ? <><Loader2 size={18} className="animate-spin" /> Enviando...</>
+                      : <><Send size={17} /> Solicitar apresentação</>}
+                  </button>
+                  <p className="text-center text-gray-400 text-xs mt-4 flex items-center justify-center gap-1.5">
+                    <Lock size={11} /> Seus dados são usados apenas para entrarmos em contato.
+                  </p>
+                </form>
+              )}
+            </div>
+          </Reveal>
+
+          {/* Canais + demo + FAQ */}
+          <div className="flex flex-col gap-4 lg:order-1 lg:pt-16">
+            <Reveal variant="left">
+              <a href={DEMO_URL} target="_blank" rel="noreferrer"
+                className="group relative block p-6 rounded-2xl bg-navy text-white overflow-hidden hover:-translate-y-1 hover:shadow-teal-lg transition-all duration-300">
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-teal/25 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+                <div className="relative flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-aura-grad flex items-center justify-center shadow-teal flex-shrink-0 group-hover:rotate-6 transition-transform">
+                    <MonitorPlay size={22} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-display font-bold flex items-center gap-1.5">
+                      Prefere ver sozinho? <ArrowUpRight size={16} className="text-teal group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </div>
+                    <div className="text-white/55 text-sm mt-0.5">Explore a demo do sistema agora</div>
+                  </div>
+                </div>
+              </a>
+            </Reveal>
+
+            {CHANNELS.map(({ icon: Icon, label, value, sub, color, href }, i) => {
+              const inner = (
+                <>
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                    style={{ background: `${color}1a`, color }}>
+                    <Icon size={21} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-display font-bold text-navy text-sm">{label}</div>
+                    <div className="text-gray-700 text-sm font-medium mt-0.5 break-all">{value}</div>
+                    <div className="text-gray-400 text-xs mt-0.5">{sub}</div>
+                  </div>
+                </>
+              )
+              const cls = 'flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-2xl transition-all duration-300 group'
+              return (
+                <Reveal key={label} variant="left" delay={80 + i * 80}>
+                  {href ? (
+                    <SpotlightCard as="a" href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
+                      className={`${cls} hover:border-teal/30 hover:shadow-card-lg hover:-translate-y-0.5`}>
+                      {inner}
+                    </SpotlightCard>
+                  ) : (
+                    <div className={cls}>{inner}</div>
+                  )}
+                </Reveal>
+              )
+            })}
+
+            <Reveal variant="left" delay={340}>
+              <div className="p-6 bg-teal-soft/60 rounded-2xl border border-teal/15 mt-2">
+                <div className="font-display font-bold text-teal-dark text-sm mb-1">Perguntas rápidas</div>
+                {FAQ.map(([q, a], i) => (
+                  <FaqItem key={q} q={q} a={a} open={faq === i} onToggle={() => setFaq(faq === i ? -1 : i)} />
+                ))}
+              </div>
+            </Reveal>
           </div>
         </div>
       </div>

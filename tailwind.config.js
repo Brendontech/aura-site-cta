@@ -29,7 +29,12 @@ export default {
         'ping-slow':    'ping 2s cubic-bezier(0,0,0.2,1) infinite',
         'bounce-slow':  'bounce 3s infinite',
         'gradient-x':   'gradientX 4s ease infinite',
-        'scroll-left':  'scrollLeft 30s linear infinite',
+        'scroll-left':  'scrollLeft 40s linear infinite',
+        'scroll-right': 'scrollLeft 40s linear infinite reverse',
+        'spin-slow':    'spin 18s linear infinite',
+        'swap-in':      'swapIn .6s cubic-bezier(.16,1,.3,1) both',
+        'fade-up':      'slideUp 0.9s cubic-bezier(.16,1,.3,1) both',
+        'tab-progress': 'tabProgress linear forwards',
       },
       keyframes: {
         float:      { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-14px)' } },
@@ -39,6 +44,11 @@ export default {
         scan:       { '0%,100%': { top: '0%' }, '50%': { top: '90%' } },
         gradientX:  { '0%,100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
         scrollLeft: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        tabProgress:{ from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
+        swapIn:     { from: { opacity: '0', transform: 'translateY(16px) scale(.98)' }, to: { opacity: '1', transform: 'none' } },
+      },
+      transitionTimingFunction: {
+        'out-expo': 'cubic-bezier(.16,1,.3,1)',
       },
       boxShadow: {
         'teal':   '0 4px 24px rgba(43,191,179,0.35)',
