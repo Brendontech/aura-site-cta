@@ -1,19 +1,23 @@
 import React from 'react'
 import Hero from '../components/Hero'
-import StatsBar from '../components/StatsBar'
+import ModulesMarquee from '../components/ModulesMarquee'
 import Features from '../components/Features'
-import IntelligenceBanner from '../components/IntelligenceBanner'
+import CheckinSection from '../components/CheckinSection'
 import Benefits from '../components/Benefits'
 import Pricing from '../components/Pricing'
+import StatsBar from '../components/StatsBar'
+import Testimonials from '../components/Testimonials'
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <ModulesMarquee />
       <StatsBar />
       <Features />
-      <IntelligenceBanner />
+      <CheckinSection />
       <Benefits />
+      <Testimonials />
       <Pricing />
     </>
   )
