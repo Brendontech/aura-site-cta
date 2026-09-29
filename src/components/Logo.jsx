@@ -37,7 +37,7 @@ export default function Logo({ dark = true, compact = false, size = 'md' }) {
   return (
     <span className="inline-flex items-center gap-2.5 select-none" aria-label="Sanyti — Sistema de Gerenciamento" role="img">
       <LogoMark className={`${s.mark} transition-all duration-500`} />
-      <span className="flex flex-col leading-none">
+      <span className="flex flex-col justify-center leading-none">
         <span className={`font-display font-extrabold tracking-tight ${s.word} transition-all duration-500 ${dark ? 'text-white' : 'text-[#0F3D47]'}`}>
           SANYT<span className="text-teal">i</span>
         </span>
