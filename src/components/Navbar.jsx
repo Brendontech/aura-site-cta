@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, ChevronRight, MonitorPlay } from 'lucide-react'
+import { Menu, X, LogIn, MonitorPlay } from 'lucide-react'
 import Logo from './Logo'
-import { useDemoChooser } from '../context/DemoChooser'
-import { DEMO_URL } from '../config'
+import { DEMO_URL, LOGIN_URL } from '../config'
 
 const LINKS = [
   { label: 'Funcionalidades', id: 'funcionalidades' },
@@ -24,7 +23,6 @@ export default function Navbar() {
   const [pill, setPill]         = useState(null)
   const linkRefs = useRef({})
   const { pathname } = useLocation()
-  const { open: openChooser } = useDemoChooser()
   const isHome = pathname === '/'
 
   useEffect(() => {
@@ -104,9 +102,9 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center justify-self-end gap-3">
-              <button onClick={openChooser} className="hidden sm:inline-flex btn-primary text-sm px-5 py-2.5">
-                Conheça o Sistema <ChevronRight size={15} />
-              </button>
+              <a href={LOGIN_URL} className="hidden sm:inline-flex btn-glass text-sm px-6 py-2.5 border-teal/50 hover:border-teal hover:bg-teal/15 group">
+                <LogIn size={16} className="text-teal group-hover:translate-x-0.5 transition-transform" /> Entrar
+              </a>
               <button className="lg:hidden text-white w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors"
                 aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen}
                 onClick={() => setMenuOpen(o => !o)}>
@@ -138,8 +136,11 @@ export default function Navbar() {
           </div>
           <div className={`flex flex-col sm:flex-row gap-3 mt-10 transition-all duration-500 ${menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             style={{ transitionDelay: menuOpen ? '420ms' : '0ms' }}>
-            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary text-base">
-              <MonitorPlay size={18} /> Explorar a demo
+            <a href={LOGIN_URL} className="btn-primary text-base">
+              <LogIn size={18} /> Entrar
+            </a>
+            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-glass text-base">
+              <MonitorPlay size={18} className="text-teal" /> Explorar a demo
             </a>
             <Link to="/contato" onClick={() => setMenuOpen(false)} className="btn-glass text-base">
               Falar com a equipe
