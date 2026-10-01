@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, LogIn, MonitorPlay } from 'lucide-react'
+import { Menu, X, LogIn } from 'lucide-react'
 import Logo from './Logo'
-import { DEMO_URL, LOGIN_URL } from '../config'
+import { LOGIN_URL } from '../config'
 
 const LINKS = [
   { label: 'Funcionalidades', id: 'funcionalidades' },
@@ -138,9 +138,6 @@ export default function Navbar() {
             style={{ transitionDelay: menuOpen ? '420ms' : '0ms' }}>
             <a href={LOGIN_URL} className="btn-primary text-base">
               <LogIn size={18} /> Entrar
-            </a>
-            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-glass text-base">
-              <MonitorPlay size={18} className="text-teal" /> Explorar a demo
             </a>
             <Link to="/contato" onClick={() => setMenuOpen(false)} className="btn-glass text-base">
               Falar com a equipe

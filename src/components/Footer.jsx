@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MessageCircle, Mail, Phone, MapPin, ShieldCheck, FileSignature, MonitorPlay, ArrowUpRight, Barcode } from 'lucide-react'
 import Logo from './Logo'
-import { CONTACT_EMAIL, DEMO_URL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
+import { CONTACT_EMAIL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
 
 const NAV = [
   ['Funcionalidades', '/#funcionalidades'],
@@ -43,10 +43,9 @@ export default function Footer() {
               {NAV.map(([l, to]) => (
                 <Link key={l} to={to} className="text-white/50 text-sm hover:text-teal hover:translate-x-1 transition-all w-fit">{l}</Link>
               ))}
-              <a href={DEMO_URL} target="_blank" rel="noreferrer"
-                className="text-teal text-sm font-semibold hover:text-teal-light transition-colors w-fit inline-flex items-center gap-1.5">
-                <MonitorPlay size={14} /> Explorar a demo <ArrowUpRight size={13} />
-              </a>
+              <Link to="/contato" className="text-teal text-sm font-semibold hover:text-teal-light transition-colors w-fit inline-flex items-center gap-1.5">
+                <MonitorPlay size={14} /> Agendar apresentação <ArrowUpRight size={13} />
+              </Link>
             </div>
           </div>
 

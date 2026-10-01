@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Mail, MessageCircle, Clock, Send, CheckCircle2, ChevronDown, MonitorPlay, ArrowUpRight, Loader2, Lock, Sparkles } from 'lucide-react'
 import { Reveal, SpotlightCard } from '../components/ui'
-import { CONTACT_EMAIL, DEMO_URL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
+import { CONTACT_EMAIL, WHATSAPP_TXT, WHATSAPP_URL } from '../config'
 import { sendLead } from '../lib/sendLead'
 import { PLANS } from '../data/plans'
 
@@ -13,7 +13,7 @@ const CHANNELS = [
 ]
 
 const FAQ = [
-  ['Posso ver o sistema antes de contratar?', 'Sim. A demo é aberta: você entra no sistema e navega pelos módulos e pelo prontuário. É um ambiente só de visualização, então nada é criado ou alterado.'],
+  ['Posso ver o sistema antes de contratar?', 'Sim. Agende uma apresentação: nossa equipe mostra o sistema funcionando, com foco na sua operação, e libera um acesso de demonstração depois da reunião.'],
   ['Como funciona o check-in e check-out?', 'Próximo à residência, o profissional faz o check-in e o sistema registra a distância até o endereço do paciente. No check-out, o mesmo. Assim o faturamento sabe se a visita realmente aconteceu.'],
   ['Como o responsável assina os documentos?', 'Você cadastra o responsável e envia o login por e-mail ou WhatsApp. Ele acessa o portal, vê os documentos pendentes e assina pelo próprio sistema.'],
   ['Meus dados ficam seguros?', 'Sim. Os dados de cada empresa ficam isolados, a comunicação é criptografada (HTTPS/TLS) e os dados de saúde são tratados como dados sensíveis, conforme a LGPD.'],
@@ -137,7 +137,7 @@ export default function ContactPage() {
             <span className="gradient-text">seu Home Care?</span>
           </h1>
           <p className="text-white/60 text-lg max-w-xl mx-auto mt-6 animate-fade-up" style={{ animationDelay: '200ms' }}>
-            Solicite uma apresentação com a nossa equipe ou explore a demo agora mesmo.
+            Solicite uma apresentação com a nossa equipe e veja o sistema funcionando na sua realidade.
           </p>
         </div>
         <div className="absolute bottom-0 left-0 right-0 leading-[0]">
@@ -170,9 +170,6 @@ export default function ContactPage() {
                     </p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-3 mt-2">
-                    <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary">
-                      <MonitorPlay size={17} /> Explorar a demo enquanto isso
-                    </a>
                     <button onClick={() => { setForm({ ...EMPTY, plano: form.plano, ciclo: form.ciclo }); setTouched({}); setErrors({}); setStatus('idle') }}
                       className="btn-ghost justify-center">
                       Enviar outra
@@ -266,25 +263,8 @@ export default function ContactPage() {
             </div>
           </Reveal>
 
-          {/* Canais + demo + FAQ */}
+          {/* Canais + FAQ */}
           <div className="flex flex-col gap-4 lg:order-1 lg:pt-16">
-            <Reveal variant="left">
-              <a href={DEMO_URL} target="_blank" rel="noreferrer"
-                className="group relative block p-6 rounded-2xl bg-navy text-white overflow-hidden hover:-translate-y-1 hover:shadow-teal-lg transition-all duration-300">
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-teal/25 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
-                <div className="relative flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-aura-grad flex items-center justify-center shadow-teal flex-shrink-0 group-hover:rotate-6 transition-transform">
-                    <MonitorPlay size={22} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-display font-bold flex items-center gap-1.5">
-                      Prefere ver sozinho? <ArrowUpRight size={16} className="text-teal group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </div>
-                    <div className="text-white/55 text-sm mt-0.5">Explore a demo do sistema agora</div>
-                  </div>
-                </div>
-              </a>
-            </Reveal>
 
             {CHANNELS.map(({ icon: Icon, label, value, sub, color, href }, i) => {
               const inner = (

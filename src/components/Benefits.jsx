@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Wallet, FileSignature, ShieldCheck, Layers, MonitorPlay, ArrowUpRight, MessagesSquare, Lock } from 'lucide-react'
+import { Wallet, FileSignature, ShieldCheck, Layers, MonitorPlay, ArrowUpRight, MessagesSquare, Lock, MessageCircle } from 'lucide-react'
 import { Reveal, SectionHeader, SpotlightCard } from './ui'
-import { DEMO_URL } from '../config'
+import { WHATSAPP_URL } from '../config'
 
 const BENEFITS = [
   {
@@ -38,25 +38,25 @@ function DemoBand() {
       <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-green/20 rounded-full blur-[120px] animate-float" />
       <div className="relative z-10 grid lg:grid-cols-[1.2fr_1fr] gap-10 items-center px-7 py-12 sm:px-12 lg:px-16 lg:py-16">
         <div>
-          <div className="section-tag-dark"><MonitorPlay size={13} /> Demo aberta</div>
+          <div className="section-tag-dark"><MonitorPlay size={13} /> Apresentação guiada</div>
           <h3 className="font-display font-black text-3xl lg:text-4xl text-white leading-tight mt-5">
-            Veja o Sanyti por dentro,<br /><span className="gradient-text">agora mesmo.</span>
+            Veja o Sanyti por dentro,<br /><span className="gradient-text">com a nossa equipe.</span>
           </h3>
           <p className="text-white/60 text-lg mt-4 max-w-lg">
-            Entre no ambiente de demonstração e navegue pelos módulos e pelo prontuário, no seu ritmo.
+            Agende uma apresentação: mostramos o sistema funcionando, do prontuário ao financeiro, com foco na realidade da sua operação.
           </p>
           <div className="inline-flex items-center gap-2 text-xs text-white/45 mt-5">
-            <Lock size={12} className="text-teal" /> Ambiente somente para visualização — nada é criado ou alterado.
+            <Lock size={12} className="text-teal" /> Sem compromisso. Nossa equipe retorna o mais rápido possível.
           </div>
         </div>
         <div className="flex flex-col sm:flex-row lg:flex-col gap-3.5">
-          <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary text-base py-4 group">
-            <MonitorPlay size={18} /> Explorar a demo
+          <Link to="/contato" className="btn-primary text-base py-4 group">
+            <MessagesSquare size={18} /> Agendar apresentação
             <ArrowUpRight size={17} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
-          <Link to="/contato" className="btn-glass text-base py-4">
-            <MessagesSquare size={18} className="text-teal" /> Agendar apresentação
           </Link>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-glass text-base py-4">
+            <MessageCircle size={18} className="text-[#25D366]" /> Chamar no WhatsApp
+          </a>
         </div>
       </div>
     </Reveal>
