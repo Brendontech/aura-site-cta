@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { ChevronRight, MonitorPlay, CheckCircle2, MapPin, Boxes, TrendingUp, Wallet } from 'lucide-react'
+import { ChevronRight, CheckCircle2, MapPin, Boxes, TrendingUp, Wallet } from 'lucide-react'
 import { useAnimatedCounter, useTilt } from '../hooks/useScrollReveal'
 import { useDemoChooser } from '../context/DemoChooser'
-import { DEMO_URL } from '../config'
 
 // ── Mockup do painel ───────────────────────────────────────
 function DashboardMockup() {
@@ -113,7 +112,7 @@ export default function Hero() {
     return () => clearInterval(t)
   }, [phrases.length])
 
-  const checks = ['Resultado de cada atendimento', 'Estoque sempre atualizado', 'Demo aberta para explorar']
+  const checks = ['Resultado de cada atendimento', 'Estoque sempre atualizado', 'Apresentação guiada gratuita']
 
   return (
     <section id="inicio" className="relative min-h-[100svh] bg-dark-grad flex items-center overflow-hidden pt-[76px] noise">
@@ -164,8 +163,9 @@ export default function Hero() {
               <button onClick={openChooser} className="btn-primary text-base px-8 py-4 group">
                 Conheça o Sistema <ChevronRight size={17} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-glass text-base px-7 py-4 group">
-                <MonitorPlay size={17} className="text-teal group-hover:scale-110 transition-transform" /> Explorar a demo
+              <a href="#financeiro" onClick={(e) => { e.preventDefault(); document.getElementById('financeiro')?.scrollIntoView({ behavior: 'smooth' }) }}
+                className="btn-glass text-base px-7 py-4 group">
+                <Wallet size={17} className="text-teal group-hover:scale-110 transition-transform" /> Ver o financeiro
               </a>
             </div>
 

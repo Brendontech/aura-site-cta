@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import help from '../data/help.json'
 import { Reveal } from '../components/ui'
-import { DEMO_URL, WHATSAPP_URL } from '../config'
+import { WHATSAPP_URL } from '../config'
 
 const CAT_ICONS = {
   'primeiros-passos': Zap, agenda: CalendarDays, pacientes: UsersRound, prescricoes: FileText,
@@ -290,10 +290,10 @@ export default function HelpPage() {
               <div className="relative flex flex-col md:flex-row md:items-center gap-6">
                 <div className="flex-1">
                   <h3 className="font-display font-black text-white text-xl sm:text-2xl">Não encontrou o que procurava?</h3>
-                  <p className="text-white/55 mt-2">Veja o sistema funcionando na demo ou fale diretamente com a nossa equipe.</p>
+                  <p className="text-white/55 mt-2">Agende uma apresentação do sistema ou fale diretamente com a nossa equipe.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn-primary"><MonitorPlay size={17} /> Explorar a demo</a>
+                  <Link to="/contato" className="btn-primary"><MonitorPlay size={17} /> Agendar apresentação</Link>
                   <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-glass"><MessagesSquare size={17} className="text-teal" /> Falar com a equipe</a>
                 </div>
               </div>
