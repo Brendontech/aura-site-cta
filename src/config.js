@@ -1,5 +1,5 @@
 // Dados de contato e links usados em todo o site — altere aqui.
-export const LOGIN_URL     = 'https://www.sanyti.com.br/'
+export const LOGIN_URL     = 'https://www.sanyti.com.br/login'
 export const WHATSAPP_NUM  = '5561992510045'
 export const WHATSAPP_TXT  = '(61) 99251-0045'
 export const WHATSAPP_URL  = `https://wa.me/${WHATSAPP_NUM}`
