@@ -102,7 +102,7 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center justify-self-end gap-3">
-              <a href={LOGIN_URL} className="hidden sm:inline-flex btn-glass text-sm px-6 py-2.5 border-teal/50 hover:border-teal hover:bg-teal/15 group">
+              <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-flex btn-glass text-sm px-6 py-2.5 border-teal/50 hover:border-teal hover:bg-teal/15 group">
                 <LogIn size={16} className="text-teal group-hover:translate-x-0.5 transition-transform" /> Entrar
               </a>
               <button className="lg:hidden text-white w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors"
@@ -136,7 +136,7 @@ export default function Navbar() {
           </div>
           <div className={`flex flex-col sm:flex-row gap-3 mt-10 transition-all duration-500 ${menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             style={{ transitionDelay: menuOpen ? '420ms' : '0ms' }}>
-            <a href={LOGIN_URL} className="btn-primary text-base">
+            <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="btn-primary text-base">
               <LogIn size={18} /> Entrar
             </a>
             <Link to="/contato" onClick={() => setMenuOpen(false)} className="btn-glass text-base">
